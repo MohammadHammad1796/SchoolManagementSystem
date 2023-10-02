@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Admission", "Admission\Admission.csproj", "{75010035-9E02-414B-BB73-F2D5826FBF58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SchoolManagementSystem.Admission", "SchoolManagementSystem.Admission\SchoolManagementSystem.Admission.csproj", "{75010035-9E02-414B-BB73-F2D5826FBF58}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Attendance", "Attendance\Attendance.csproj", "{32E7361C-9336-4670-8EB6-601D4B726567}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SchoolManagementSystem.Attendance", "SchoolManagementSystem.Attendance\SchoolManagementSystem.Attendance.csproj", "{32E7361C-9336-4670-8EB6-601D4B726567}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Courses", "Courses\Courses.csproj", "{0E37EEC4-5796-4F77-87C7-6B5F24D3F2C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SchoolManagementSystem.Courses", "SchoolManagementSystem.Courses\SchoolManagementSystem.Courses.csproj", "{0E37EEC4-5796-4F77-87C7-6B5F24D3F2C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A12DD5B4-8943-47E5-B060-BCAD6DAF3ABE}"
 	ProjectSection(SolutionItems) = preProject
@@ -16,9 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway", "APIGateway\APIGateway.csproj", "{3DFB00D3-8F7B-4EAF-9C74-272830E1D122}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SchoolManagementSystem.APIGateway", "SchoolManagementSystem.APIGateway\SchoolManagementSystem.APIGateway.csproj", "{3DFB00D3-8F7B-4EAF-9C74-272830E1D122}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Authorization", "Authorization\Authorization.csproj", "{4133BCAB-B569-4CFD-936F-7EE990D82C37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SchoolManagementSystem.Authorization", "SchoolManagementSystem.Authorization\SchoolManagementSystem.Authorization.csproj", "{4133BCAB-B569-4CFD-936F-7EE990D82C37}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SchoolManagementSystem.Shared", "SchoolManagementSystem.Shared\SchoolManagementSystem.Shared.csproj", "{AAC594AB-BA64-4953-9682-278C3770E22D}"
 EndProject
