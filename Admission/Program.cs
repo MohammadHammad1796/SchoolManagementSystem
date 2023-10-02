@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using SchoolManagementSystem.Shared.Auth;
+
 namespace Admission;
 
 public class Program
@@ -26,6 +29,15 @@ public class Program
 		});
 
 		services.AddControllers();
+
+		services.AddHttpClient();
+		services.AddAuthentication(options =>
+		{
+			options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+			options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+			options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+		}).AddJwtBearer();
+		services.AddAuthorization();
 	}
 
 	private static void ConfigureApplication(WebApplication application)
@@ -36,6 +48,11 @@ public class Program
 		application.UseCors("AllowedOrigins");
 
 		application.UseRouting();
+
+		application.UseSchoolAuthentication(application.Configuration["AuthorizationServiceUrl"]);
+		application.UseAuthentication();
+		application.UseAuthorization();
+
 		application.UseEndpoints(endpoints =>
 		{
 			endpoints.MapControllerRoute(
