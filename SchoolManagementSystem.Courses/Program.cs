@@ -1,5 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using SchoolManagementSystem.Courses.Models;
 using SchoolManagementSystem.Shared.Auth;
+using SchoolManagementSystem.Shared.Exceptions;
+using SchoolManagementSystem.Shared.Helpers;
+using System.Text.Json;
 
 namespace SchoolManagementSystem.Courses;
 
@@ -9,7 +14,7 @@ public class Program
 	{
 		var builder = WebApplication.CreateBuilder(args);
 
-		ConfigureServices(builder.Services, builder.Configuration);
+		ConfigureServices(builder.Services, builder.Configuration, builder.Environment);
 
 		var app = builder.Build();
 		ConfigureApplication(app);
@@ -17,8 +22,19 @@ public class Program
 		app.Run();
 	}
 
-	private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+	private static void ConfigureServices(
+		IServiceCollection services,
+		IConfiguration configuration,
+		IHostEnvironment environment)
 	{
+		services.AddDbContext<ApplicationDbContext>(options =>
+			options.UseSqlServer(configuration.GetConnectionString("Default")));
+
+		services.AddSingleton(configuration);
+		services.AddHttpClient();
+		services.AddHttpContextAccessor();
+		services.AddScoped<ISchoolHttpClient, SchoolHttpClient>();
+
 		services.AddCors(options =>
 		{
 			options.AddPolicy(name: "AllowedOrigins",
@@ -28,9 +44,18 @@ public class Program
 				});
 		});
 
-		services.AddControllers();
+		services.AddControllers()
+			.AddJsonOptions(options =>
+			{
+				options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+				options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+				options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+			})
+			.ConfigureApiBehaviorOptions(options =>
+			{
+				options.SuppressModelStateInvalidFilter = true;
+			});
 
-		services.AddHttpClient();
 		services.AddAuthentication(options =>
 		{
 			options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -38,12 +63,18 @@ public class Program
 			options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 		}).AddJwtBearer();
 		services.AddAuthorization();
+
+		if (environment.IsDevelopment())
+			services.AddDatabaseDeveloperPageExceptionFilter();
 	}
 
 	private static void ConfigureApplication(WebApplication application)
 	{
 		if (application.Environment.IsDevelopment())
 			application.UseDeveloperExceptionPage();
+
+		if (!application.Environment.IsDevelopment())
+			application.UseExceptionHandling();
 
 		application.UseCors("AllowedOrigins");
 

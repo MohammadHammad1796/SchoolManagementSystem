@@ -38,11 +38,11 @@ public partial class SeedAdminAccountAndRole : Migration
 
 		migrationBuilder.InsertData(
 			table: "AspNetUserRoles",
-			columns: new[] { "UserId", "RoleId" },
+			columns: new[] { "UserId", "RoleId", "Id" },
 			values: new object[,]
 			{
 				{
-					"db71636d-8201-42b9-8aca-d25101a179a4", "55d8b8fa-5eb1-4069-a19c-6967695c97ab"
+					"db71636d-8201-42b9-8aca-d25101a179a4", "55d8b8fa-5eb1-4069-a19c-6967695c97ab", "2b147c23-e8b5-4481-8cbb-2eac4ce51faf"
 				}
 			});
 	}

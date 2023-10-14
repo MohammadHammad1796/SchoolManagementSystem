@@ -115,7 +115,7 @@ public partial class InitialMigration : Migration
 			{
 				UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
 				RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-				Id = table.Column<string>(type: "nvarchar(max)", nullable: true)
+				Id = table.Column<string>(type: "nvarchar(max)", nullable: false)
 			},
 			constraints: table =>
 			{

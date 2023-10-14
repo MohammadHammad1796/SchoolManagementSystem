@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 using SchoolManagementSystem.Authorization.Controllers.Resources;
-using SchoolManagementSystem.Authorization.Extensions;
 using SchoolManagementSystem.Authorization.Models;
 using SchoolManagementSystem.Authorization.Services;
+using SchoolManagementSystem.Shared.Auth;
+using SchoolManagementSystem.Shared.Extensions;
 using System.Security.Claims;
 
 namespace SchoolManagementSystem.Authorization.Controllers;
@@ -16,14 +17,17 @@ public class AccountsController : Controller
 {
 	private readonly ApplicationDbContext _dbContext;
 	private readonly UserManager<ApplicationUser> _userManager;
+	private readonly RoleManager<ApplicationRole> _roleManager;
 	private readonly IAccountsService _accountsService;
 
 	public AccountsController(ApplicationDbContext dbContext,
 		UserManager<ApplicationUser> userManager,
+		RoleManager<ApplicationRole> roleManager,
 		IAccountsService accountsService)
 	{
 		_dbContext = dbContext;
 		_userManager = userManager;
+		_roleManager = roleManager;
 		_accountsService = accountsService;
 	}
 
@@ -48,12 +52,18 @@ public class AccountsController : Controller
 			NormalizedEmail = resource.Email.ToUpper()
 		};
 
+		var noRole = await _roleManager.FindByNameAsync(Roles.NoRole);
+		user.UserRoles.Add(new ApplicationUserRole()
+		{
+			Role = noRole
+		});
+
 		await _userManager.CreateAsync(user, resource.Password);
+
 		var affectedRows = await _dbContext.SaveChangesAsync();
 
-		affectedRows += await _dbContext.SaveChangesAsync();
 		if (affectedRows == 0)
-			return StatusCode(StatusCodes.Status500InternalServerError);
+			return this.ServerError();
 
 		return NoContent();
 	}
@@ -84,14 +94,7 @@ public class AccountsController : Controller
 
 		var jwt = await _accountsService.GenerateJwtAsync(user);
 
-		try
-		{
-			await _dbContext.SaveChangesAsync();
-		}
-		catch (Exception ex)
-		{
-			return Ok(ex.Message);
-		}
+		await _dbContext.SaveChangesAsync();
 		return Ok(jwt);
 	}
 
@@ -104,7 +107,7 @@ public class AccountsController : Controller
 		if (!validateResult.Succeeded)
 			return Unauthorized();
 
-		_dbContext.RefreshTokens.Remove(validateResult.ObjectResult);
+		_dbContext.RefreshTokens.Remove(validateResult.ObjectResult!);
 
 		var user = await _userManager.FindByIdAsync(validateResult.ObjectResult.UserId);
 		if (user is null)

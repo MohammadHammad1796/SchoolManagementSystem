@@ -25,20 +25,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 				.WithOne(ur => ur.User)
 				.HasForeignKey(ur => ur.UserId)
 				.IsRequired();
-
-			b.HasMany(au => au.Roles)
-				.WithMany(ar => ar.Users)
-				.UsingEntity<ApplicationUserRole>(builder =>
-						builder
-							.HasOne(userRole => userRole.Role)
-							.WithMany(role => role.RoleUsers)
-							.HasForeignKey(x => x.RoleId)
-							.IsRequired(),
-					builder => builder
-						.HasOne(userRole => userRole.User)
-						.WithMany(user => user.UserRoles)
-						.HasForeignKey(x => x.UserId)
-						.IsRequired());
 		});
 
 		modelBuilder.Entity<ApplicationRole>(b =>
@@ -47,11 +33,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 				.WithOne(ur => ur.Role)
 				.HasForeignKey(ur => ur.RoleId)
 				.IsRequired();
-
-			b.HasMany(ar => ar.Users)
-				.WithMany(au => au.Roles)
-				.UsingEntity<ApplicationUserRole>()
-				.HasKey(aur => aur.RoleId);
 		});
 
 		modelBuilder.Entity<ApplicationUserRole>().ToTable("AspNetUserRoles");

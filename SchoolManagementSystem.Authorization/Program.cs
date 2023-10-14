@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SchoolManagementSystem.Authorization.Models;
 using SchoolManagementSystem.Authorization.Services;
+using SchoolManagementSystem.Shared.Exceptions;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 namespace SchoolManagementSystem.Authorization;
 
@@ -31,6 +33,8 @@ public class Program
 		services.AddDbContext<ApplicationDbContext>(options =>
 			options.UseSqlServer(configuration.GetConnectionString("Default")));
 
+		services.AddSingleton(configuration);
+
 		services.AddCors(options =>
 		{
 			options.AddPolicy(name: "AllowedOrigins",
@@ -45,6 +49,8 @@ public class Program
 			.AddJsonOptions(options =>
 			{
 				options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+				options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+				options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
 			})
 			.ConfigureApiBehaviorOptions(options =>
 			{
@@ -119,6 +125,9 @@ public class Program
 	{
 		if (application.Environment.IsDevelopment())
 			application.UseDeveloperExceptionPage();
+
+		if (!application.Environment.IsDevelopment())
+			application.UseExceptionHandling();
 
 		application.UseCors("AllowedOrigins");
 

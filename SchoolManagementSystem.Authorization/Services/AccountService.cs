@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SchoolManagementSystem.Authorization.Controllers.Resources;
 using SchoolManagementSystem.Authorization.Models;
+using SchoolManagementSystem.Shared.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -124,8 +125,9 @@ public class AccountService : IAccountsService
 		if (!isValidAlgorith)
 			return result;
 
-		if (validatedToken.ValidTo > DateTime.UtcNow)
-			return result;
+		// when change user roles se should allow to refresh token
+		//if (validatedToken.ValidTo > DateTime.UtcNow)
+		//	return result;
 
 		var tokenId = principal.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
 
@@ -143,6 +145,15 @@ public class AccountService : IAccountsService
 		result.Succeeded = true;
 		result.ObjectResult = storedRefreshToken;
 		return result;
+	}
+
+	public async Task RemoveFromRoleAsync(ApplicationUser user, string roleName)
+	{
+		var role = await _dbContext.UserRoles.SingleOrDefaultAsync(ur =>
+			ur.Role.Name.Equals(roleName)
+			&& ur.UserId == user.Id);
+		if (role is not null)
+			_dbContext.UserRoles.Remove(role);
 	}
 
 	private static string GenerateSalt()

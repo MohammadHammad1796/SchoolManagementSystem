@@ -6,5 +6,7 @@ public static class Roles
 
 	public const string Student = "Student";
 
-	public const string AdminOrStudent = $"{Admin},{Student}";
+	public const string NoRole = "NoRole";
+
+	public const string NoRoleOrStudent = $"{NoRole},{Student}";
 }

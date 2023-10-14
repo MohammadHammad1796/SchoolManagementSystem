@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SchoolManagementSystem.Shared\SchoolManagementSystem.Shared.csproj" />
   </ItemGroup>
 
