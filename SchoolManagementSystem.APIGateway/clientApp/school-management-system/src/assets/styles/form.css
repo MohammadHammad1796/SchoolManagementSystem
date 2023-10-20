@@ -1,0 +1,4 @@
+div.form-group,
+button[type="submit"] {
+  margin: 5px;
+}

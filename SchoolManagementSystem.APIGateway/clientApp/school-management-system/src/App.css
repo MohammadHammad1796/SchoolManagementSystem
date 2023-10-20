@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+nav.navbar {
+  background-color: #481b6f !important;
+}
+
+footer > div.wrapper,
+footer > div.wrapper a {
+  color: #fff !important;
+  text-decoration: none;
+  font-family: "Montserrat", sans-serif;
+}

@@ -1,0 +1,6 @@
+{
+    "accountsRoute": "authorization/accounts/",
+    "registrationRoute": "admission/registration/",
+    "coursesRoute": "courses/courses/",
+    "attendanceRoute": "attendance/attend/"
+}

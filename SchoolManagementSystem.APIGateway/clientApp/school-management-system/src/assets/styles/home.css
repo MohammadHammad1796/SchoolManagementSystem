@@ -1,0 +1,14 @@
+ul.home-links > li {
+  display: inline-block;
+  padding: 0px !important;
+}
+
+ul.home-links > li > a {
+  height: 120px;
+  color: #fff !important;
+  text-decoration: none !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
