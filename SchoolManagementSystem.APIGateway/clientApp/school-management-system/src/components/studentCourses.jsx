@@ -23,7 +23,7 @@ const StudentCourses = () => {
 
   useEffect(() => {
     handleInitialRender();
-  });
+  }, []);
 
   return (
     <div className="col-md-4">

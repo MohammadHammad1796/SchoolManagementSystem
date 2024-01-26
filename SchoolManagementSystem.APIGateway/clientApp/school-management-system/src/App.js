@@ -53,7 +53,7 @@ function App() {
 
     toast.error(errorMessage);
     localStorage.removeItem("loadMessage");
-  });
+  }, []);
 
   return (
     <AppContextProvider

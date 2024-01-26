@@ -25,7 +25,7 @@ const RegisterCourses = () => {
 
   useEffect(() => {
     handleInitialRender();
-  });
+  }, []);
 
   const handleSubmit = async () => {
     let errors = "";
