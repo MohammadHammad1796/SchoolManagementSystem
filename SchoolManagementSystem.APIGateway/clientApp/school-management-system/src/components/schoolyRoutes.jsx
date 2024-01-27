@@ -16,6 +16,7 @@ import StudentCourses from "./studentCourses";
 import Forbidden from "./forbidden";
 import NotFound from "./notFound";
 import Attendance from "./attendance";
+import { rolesEnum } from "../utils/enums";
 
 const SchoolyRoutes = () => {
   const context = useContext(AppContext);
@@ -23,49 +24,49 @@ const SchoolyRoutes = () => {
     {
       component: <Enroll />,
       path: "/enroll",
-      requireAuthorize: ["norole"],
+      requireAuthorize: [rolesEnum.noRole],
     },
     {
       component: <Students />,
       path: "/students",
-      requireAuthorize: ["admin"],
+      requireAuthorize: [rolesEnum.admin],
     },
     {
       component: <Courses />,
       path: "/courses",
-      requireAuthorize: ["admin"],
+      requireAuthorize: [rolesEnum.admin],
     },
     {
       component: <CourseForm />,
       path: "/courses/new",
-      requireAuthorize: ["admin"],
+      requireAuthorize: [rolesEnum.admin],
     },
     {
       component: <CourseForm />,
       path: "/courses/:id",
-      requireAuthorize: ["admin"],
+      requireAuthorize: [rolesEnum.admin],
     },
     {
       component: <RegisterCourses />,
       path: "/courses/register",
-      requireAuthorize: ["student"],
+      requireAuthorize: [rolesEnum.student],
       isAllowed: !context.isCoursesRegistered.get() && context.isAccepted.get(),
     },
     {
       component: <StudentCourses />,
       path: "/courses/mine",
-      requireAuthorize: ["student"],
+      requireAuthorize: [rolesEnum.student],
       isAllowed: context.isCoursesRegistered.get() && context.isAccepted.get(),
     },
     {
       component: <StudentCourses />,
       path: "/students/courses/:studentId",
-      requireAuthorize: ["admin"],
+      requireAuthorize: [rolesEnum.admin],
     },
     {
       component: <Attendance />,
       path: "/attendance",
-      requireAuthorize: ["admin"],
+      requireAuthorize: [rolesEnum.admin],
     },
     { component: <About />, path: "/about" },
     { component: <Register />, path: "/register", anonymousOnly: true },

@@ -9,7 +9,7 @@ export function getUser() {
     const tokenObject = JSON.parse(jwt);
     user = jwtDecode(tokenObject.accessToken);
 
-    user.roles = user.roles.split(",").map((role) => role.toLowerCase());
+    user.roles = user.roles.split(",").map((role) => role);
   }
   return user;
 }

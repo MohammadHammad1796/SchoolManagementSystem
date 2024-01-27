@@ -2,28 +2,29 @@ import { Link } from "react-router-dom";
 import NavLink from "./common/navLink";
 import { useContext } from "react";
 import AppContext from "./context/appContext";
+import { rolesEnum } from "../utils/enums";
 
 const NavBar = () => {
   const context = useContext(AppContext);
   const user = context.user.get();
 
   const startRoutes = [
-    { path: "/enroll", label: "Enroll", requireAuthorize: ["norole"] },
+    { path: "/enroll", label: "Enroll", requireAuthorize: [rolesEnum.noRole] },
     {
       path: "/courses/register",
       label: "Register courses",
-      requireAuthorize: ["student"],
+      requireAuthorize: [rolesEnum.student],
       isVisible: !context.isCoursesRegistered.get() && context.isAccepted.get(),
     },
     {
       path: "/courses/mine",
       label: "Courses",
-      requireAuthorize: ["student"],
+      requireAuthorize: [rolesEnum.student],
       isVisible: context.isCoursesRegistered.get() && context.isAccepted.get(),
     },
-    { path: "/courses", label: "Courses", requireAuthorize: ["admin"] },
-    { path: "/students", label: "Students", requireAuthorize: ["admin"] },
-    { path: "/attendance", label: "Attendance", requireAuthorize: ["admin"] },
+    { path: "/courses", label: "Courses", requireAuthorize: [rolesEnum.admin] },
+    { path: "/students", label: "Students", requireAuthorize: [rolesEnum.admin] },
+    { path: "/attendance", label: "Attendance", requireAuthorize: [rolesEnum.admin] },
     { path: "/about", label: "About" },
   ];
 

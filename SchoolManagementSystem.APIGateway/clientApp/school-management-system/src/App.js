@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AdmissionService from "./services/admissionService";
 import CourseService from "./services/courseService";
 import NavLink from "./components/common/navLink";
+import { rolesEnum } from "./utils/enums";
 
 function App() {
   const [user, setUser] = useStateWithCallbackLazy(getUser());
@@ -27,7 +28,7 @@ function App() {
     } catch (_) {}
 
     const checkCoursesRegistration = async () => {
-      if (user && user.roles.includes("student")) {
+      if (user && user.roles.includes(rolesEnum.student)) {
         const { data: isRegistered } =
           await CourseService.isCoursesRegisteredAsync();
         setIsCoursesRegistered(isRegistered);
@@ -38,7 +39,7 @@ function App() {
     } catch (_) {}
 
     const checkIfAccepted = async () => {
-      if (user && user.roles.includes("student")) {
+      if (user && user.roles.includes(rolesEnum.student)) {
         const { data: isAccepted } = await AdmissionService.isAcceptedAsync();
         setIsAccepted(isAccepted);
       }
