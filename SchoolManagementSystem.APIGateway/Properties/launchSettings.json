@@ -1,5 +1,12 @@
 {
   "profiles": {
+    "IIS": {
+      "commandName": "IIS",
+      "launchUrl": "https://localhost/SchoolManagementSystem/API/",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "APIGateway": {
       "commandName": "Project",
       "launchBrowser": true,
@@ -12,13 +19,6 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "IIS": {
-      "commandName": "IIS",
-      "launchUrl": "https://localhost/SchoolManagementSystem/API/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
