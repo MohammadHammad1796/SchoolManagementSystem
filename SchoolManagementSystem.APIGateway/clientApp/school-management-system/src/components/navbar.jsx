@@ -2,47 +2,15 @@ import { Link } from "react-router-dom";
 import NavLink from "./common/navLink";
 import { useContext } from "react";
 import AppContext from "./context/appContext";
-import { rolesEnum } from "../utils/enums";
+import routesConfig from "../utils/routesConfig";
 
 const NavBar = () => {
   const context = useContext(AppContext);
   const user = context.user.get();
 
-  const startRoutes = [
-    { path: "/enroll", label: "Enroll", requireAuthorize: [rolesEnum.noRole] },
-    {
-      path: "/courses/register",
-      label: "Register courses",
-      requireAuthorize: [rolesEnum.student],
-      isVisible: !context.isCoursesRegistered.get() && context.isAccepted.get(),
-    },
-    {
-      path: "/courses/mine",
-      label: "Courses",
-      requireAuthorize: [rolesEnum.student],
-      isVisible: context.isCoursesRegistered.get() && context.isAccepted.get(),
-    },
-    { path: "/courses", label: "Courses", requireAuthorize: [rolesEnum.admin] },
-    { path: "/students", label: "Students", requireAuthorize: [rolesEnum.admin] },
-    { path: "/attendance", label: "Attendance", requireAuthorize: [rolesEnum.admin] },
-    { path: "/about", label: "About" },
-  ];
-
-  const endRoutes = [
-    {
-      path: "/",
-      label: user?.email,
-      requireAuthorize: true,
-      handleClick: (e) => e.preventDefault(),
-    },
-    {
-      path: "/logout",
-      label: "Logout",
-      requireAuthorize: true,
-    },
-    { path: "/register", label: "Register", anonymousOnly: true },
-    { path: "/login", label: "Login", anonymousOnly: true },
-  ];
+  const links = routesConfig(context, useContext);
+  const startRoutes = links.filter(link => link.isInStartOfNavLinks);
+  const endRoutes = links.filter(link => link.isInEndOfNavLinks);
 
   const renderLinks = (routes) => {
     return routes.map(
