@@ -10,14 +10,14 @@ import { useEffectOnInitialRender } from "../../hooks/useEffect";
 const Form = ({
   formTitle,
   inputs,
-  dat,
+  initialData,
   schema,
   schemaMessages,
   handleSubmit,
   submitLabel,
   setDataOnInitialRender,
 }) => {
-  const [data, setData] = useState(dat);
+  const [data, setData] = useState(initialData);
   const [errors, setErrors] = useState({});
 
   useEffectOnInitialRender(() => {

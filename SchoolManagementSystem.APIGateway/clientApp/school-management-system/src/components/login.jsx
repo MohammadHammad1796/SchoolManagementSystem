@@ -69,7 +69,7 @@ const Login = () => {
     <Form
       inputs={inputs}
       formTitle={"Login"}
-      dat={data}
+      initialData={data}
       schema={schema}
       handleSubmit={handleSubmit}
     />

@@ -54,7 +54,7 @@ const Register = () => {
     <Form
       inputs={inputs}
       formTitle={"Register"}
-      dat={data}
+      initialData={data}
       schema={schema}
       handleSubmit={handleSubmit}
     />

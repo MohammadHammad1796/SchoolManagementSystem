@@ -149,7 +149,7 @@ const Enroll = () => {
     <Form
       inputs={inputs}
       formTitle={"Enroll"}
-      dat={data}
+      initialData={data}
       schema={schema}
       schemaMessages={schemaMessages}
       handleSubmit={handleSubmit}

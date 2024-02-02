@@ -82,7 +82,7 @@ const CourseForm = () => {
     <Form
       inputs={inputs}
       formTitle={id ? "Update course" : "Add course"}
-      dat={course}
+      initialData={course}
       schema={schema}
       schemaMessages={schemaMessages}
       handleSubmit={handleSubmit}
