@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Joi from "joi-browser";
 import SchoolyInput from "./schoolyInput";
 import SchoolySelect from "./schoolySelect";
 import SchoolyRadio from "./schoolyRadio";
 import "../../assets/styles/form.css";
 import { isFunctionAsync } from "../../utils/helpers";
+import { useEffectOnInitialRender } from "../../hooks/useEffect";
 
 const Form = ({
   formTitle,
@@ -14,20 +15,15 @@ const Form = ({
   schemaMessages,
   handleSubmit,
   submitLabel,
-  handleInitialRender,
+  setDataOnInitialRender,
 }) => {
   const [data, setData] = useState(dat);
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    if (handleInitialRender && typeof handleInitialRender === "function")
-      handleInitialRender();
+  useEffectOnInitialRender(() => {
+    if (setDataOnInitialRender && typeof setDataOnInitialRender === "function")
+      setDataOnInitialRender(setData);
   });
-
-  /*useEffect(() => {
-    debugger
-    setData(dat);
-  }, [dat]);*/
 
   const handleInputChange = ({ target: input }) => {
     const newData = { ...data };

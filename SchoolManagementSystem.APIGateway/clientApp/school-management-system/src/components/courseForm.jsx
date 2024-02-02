@@ -1,17 +1,17 @@
 import Form from "./common/form";
 import Joi from "joi-browser";
 import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import CourseService from "../services/courseService";
 import AppContext from "./context/appContext";
 
 const CourseForm = () => {
   const navigate = useNavigate();
   const { specializes } = useContext(AppContext);
-  const [course, setCourse] = useState({
+  const course = {
     name: "",
-    specializeId: 0,
-  });
+    specializeId: 0
+  };
   const { id } = useParams();
 
   const inputs = [
@@ -52,9 +52,9 @@ const CourseForm = () => {
     }
   };
 
-  const handleInitialRender = async () => {
+  const setFormDataOnInitialRender = async (setData) => {
     const currentCourse = await getCourse();
-    setCourse(currentCourse);
+    setData(currentCourse);
   };
 
   const handleSubmit = async (course) => {
@@ -87,7 +87,7 @@ const CourseForm = () => {
       schemaMessages={schemaMessages}
       handleSubmit={handleSubmit}
       submitLabel={id ? "Update" : "Create"}
-      handleInitialRender={handleInitialRender}
+      setDataOnInitialRender={setFormDataOnInitialRender}
     />
   );
 };
