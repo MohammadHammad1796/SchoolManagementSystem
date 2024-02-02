@@ -1,8 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import CourseService from "../services/courseService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import AppContext from "./context/appContext";
+import { useEffectOnInitialRender } from "../hooks/useEffect";
 
 const RegisterCourses = () => {
   const navigate = useNavigate();
@@ -23,9 +24,9 @@ const RegisterCourses = () => {
     } catch (_) {}
   };
 
-  useEffect(() => {
+  useEffectOnInitialRender(() => {
     handleInitialRender();
-  }, []);
+  });
 
   const handleSubmit = async () => {
     let errors = "";

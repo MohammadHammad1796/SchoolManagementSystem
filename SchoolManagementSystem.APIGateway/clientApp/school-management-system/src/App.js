@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useStateWithCallbackLazy } from "use-state-with-callback";
 import SchoolyRoutes from "./components/schoolyRoutes";
@@ -11,6 +11,7 @@ import AdmissionService from "./services/admissionService";
 import CourseService from "./services/courseService";
 import NavLink from "./components/common/navLink";
 import { rolesEnum } from "./utils/enums";
+import { useEffectOnInitialRender } from "./hooks/useEffect";
 
 function App() {
   const [user, setUser] = useStateWithCallbackLazy(getUser());
@@ -18,7 +19,7 @@ function App() {
   const [isCoursesRegistered, setIsCoursesRegistered] = useState(false);
   const [isAccepted, setIsAccepted] = useState(false);
 
-  useEffect(() => {
+  useEffectOnInitialRender(() => {
     const getSpecializes = async () => {
       const specializes = await AdmissionService.getSpecializesAsync();
       setSpecializes(specializes.data);
@@ -54,7 +55,7 @@ function App() {
 
     toast.error(errorMessage);
     localStorage.removeItem("loadMessage");
-  }, []);
+  });
 
   return (
     <AppContextProvider

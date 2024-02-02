@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CourseService from "../services/courseService";
 import { useParams } from "react-router-dom";
+import { useEffectOnInitialRender } from "../hooks/useEffect";
 
 const StudentCourses = () => {
   const { studentId } = useParams();
@@ -21,9 +22,9 @@ const StudentCourses = () => {
     } catch (_) {}
   };
 
-  useEffect(() => {
+  useEffectOnInitialRender(() => {
     handleInitialRender();
-  }, []);
+  });
 
   return (
     <div className="col-md-4">
