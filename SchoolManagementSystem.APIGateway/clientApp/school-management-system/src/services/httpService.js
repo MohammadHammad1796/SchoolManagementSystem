@@ -10,17 +10,41 @@ const refreshTokenUrl = apiUrl + urls.accountsRoute + "refreshAccessToken";
 axios.interceptors.response.use(null, async (error) => {
   const status = error.response && error.response.status;
   const result = () => Promise.reject(error);
+  const isDevelopment = process.env.NODE_ENV === "development";
+
+  const networkError = error.code === "ERR_NETWORK";
+  if (networkError) {
+    if (isDevelopment) {
+      toast.error(error.message);
+      console.log(`Logging the network error: ${error}`);
+    } else {
+      toast.error("An unexpected error occurred.");
+      // Logging the error some place;
+    }
+
+    return result();
+  }
 
   const unExpectedError = status < 400 || status >= 500;
   if (unExpectedError) {
-    console.log(`Logging the error: ${error}`);
-    toast.error("An unexpected error occurred.");
+    if (isDevelopment) {
+      toast.error(error.message);
+      console.log(`Logging the error: ${error}`);
+    } else {
+      toast.error("Network error occurred.");
+      // Logging the error some place;
+    }
     return result();
   }
 
   if (status === 403) {
-    console.log(`Logging: forbidden to access ${error.request.responseURL}`);
-    toast.error("You don't have privilege to perform this action.");
+    if (isDevelopment) {
+      toast.error(error.message);
+      console.log(`Logging: forbidden to access ${error}`);
+    } else {
+      toast.error("You don't have privilege to perform this action.");
+      // Logging the error some place;
+    }
     return result();
   }
 
