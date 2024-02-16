@@ -5,9 +5,20 @@ import { getJwt, setJwt, getUser } from "../utils/user";
 import urls from "./../utils/urls.json";
 import apiUrl from "../utils/api";
 
+let requestsNeedRefreshToken = [];
+let isRefreshTokenInProgress = false;
 const refreshTokenUrl = apiUrl + urls.accountsRoute + "refreshAccessToken";
 
-axios.interceptors.response.use(null, async (error) => {
+const processRequestsNeedRefreshTokenQueue = ({ error = null } = {}) => {
+  requestsNeedRefreshToken.forEach((promise) => {
+    if (error) promise.reject(error);
+    else promise.resolve();
+  });
+
+  requestsNeedRefreshToken = [];
+};
+
+axios.interceptors.response.use(null, (error) => {
   const status = error.response && error.response.status;
   const result = () => Promise.reject(error);
   const isDevelopment = process.env.NODE_ENV === "development";
@@ -70,14 +81,12 @@ axios.interceptors.response.use(null, async (error) => {
     return result();
   }
 
-  try {
-    await refreshAccessToken(jwt);
-    return axios(originalRequest);
-  } catch (exception) {
-    logoutApp();
-  }
+  if (isRefreshTokenInProgress)
+    return addOriginalRequestToQueue(originalRequest);
 
-  return result();
+  isRefreshTokenInProgress = true;
+
+  return startRefreshTokenProcess({ jwt, originalRequest });
 });
 
 axios.interceptors.request.use((config) => {
@@ -130,10 +139,39 @@ const refreshAccessToken = async (jwt) => {
     accessToken: jwt.accessToken,
     refreshToken: jwt.refreshToken,
   });
-  if (response && response.status === 200) {
-    setJwt(response.data);
-    return response.data;
-  }
+  if (response && response.status === 200) setJwt(response.data);
+};
+
+const addOriginalRequestToQueue = (originalRequest) => {
+  return new Promise((resolve, reject) => {
+    requestsNeedRefreshToken.push({ resolve, reject });
+  })
+    .then(() => {
+      return axios(originalRequest);
+    })
+    .catch((error) => {
+      return Promise.reject(error);
+    });
+};
+
+const startRefreshTokenProcess = ({ jwt, originalRequest }) => {
+  isRefreshTokenInProgress = true;
+
+  return new Promise((resolve, reject) => {
+    refreshAccessToken(jwt)
+      .then(() => {
+        processRequestsNeedRefreshTokenQueue();
+        resolve(axios(originalRequest));
+      })
+      .catch((error) => {
+        processRequestsNeedRefreshTokenQueue({ error });
+        reject(error);
+        logoutApp();
+      })
+      .finally(() => {
+        isRefreshTokenInProgress = false;
+      });
+  });
 };
 
 export default httpService;
