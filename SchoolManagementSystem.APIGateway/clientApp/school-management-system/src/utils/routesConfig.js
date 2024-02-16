@@ -14,7 +14,7 @@ import Logout from "../components/logout";
 import Forbidden from "../components/forbidden";
 import NotFound from "../components/notFound";
 
-const routesConfig = (context, user) => [
+const routesConfig = (context) => [
   {
     component: <Courses />,
     path: "/courses",
@@ -83,8 +83,7 @@ const routesConfig = (context, user) => [
   {
     component: <Home />,
     path: "/",
-    label: user?.email,
-    requireAuthorize: true,
+    label: context.user.get()?.email,
     handleClick: (e) => e.preventDefault(),
     isInEndOfNavLinks: true,
   },

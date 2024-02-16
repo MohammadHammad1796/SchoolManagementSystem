@@ -84,8 +84,6 @@ axios.interceptors.response.use(null, (error) => {
   if (isRefreshTokenInProgress)
     return addOriginalRequestToQueue(originalRequest);
 
-  isRefreshTokenInProgress = true;
-
   return startRefreshTokenProcess({ jwt, originalRequest });
 });
 

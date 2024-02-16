@@ -7,7 +7,7 @@ import routesConfig from "../utils/routesConfig";
 const SchoolyRoutes = () => {
   const context = useContext(AppContext);
   const user = context.user.get();
-  const routes = routesConfig(context, user);
+  const routes = routesConfig(context);
 
   return (
     <Routes>

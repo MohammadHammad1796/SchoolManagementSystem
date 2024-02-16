@@ -8,7 +8,7 @@ const NavBar = () => {
   const context = useContext(AppContext);
   const user = context.user.get();
 
-  const links = routesConfig(context, useContext);
+  const links = routesConfig(context);
   const startRoutes = links.filter(link => link.isInStartOfNavLinks);
   const endRoutes = links.filter(link => link.isInEndOfNavLinks);
 
