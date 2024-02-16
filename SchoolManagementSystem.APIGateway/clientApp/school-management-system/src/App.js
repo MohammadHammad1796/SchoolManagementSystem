@@ -40,15 +40,20 @@ function App() {
 
     AdmissionService.isAcceptedAsync()
       .then(({ data: isAccepted }) => {
-        setIsAccepted(isAccepted);
+        if (!isAccepted) {
+          setIsAccepted(isAccepted);
+          setIsCoursesRegistered(false);
+          return;
+        }
 
         CourseService.isCoursesRegisteredAsync()
           .then(({ data: isRegistered }) =>
             setIsCoursesRegistered(isRegistered)
           )
-          .catch(() => {});
+          .catch(() => setIsCoursesRegistered(false))
+          .finally(() => setIsAccepted(isAccepted));
       })
-      .catch(() => {});
+      .catch(() => setIsAccepted(false));
   }, [user]);
 
   return (
