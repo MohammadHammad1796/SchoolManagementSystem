@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useStateWithCallbackLazy } from "use-state-with-callback";
 import SchoolyRoutes from "./components/schoolyRoutes";
@@ -28,34 +28,28 @@ function App() {
       getSpecializes();
     } catch (_) {}
 
-    const checkCoursesRegistration = async () => {
-      if (user && user.roles.includes(rolesEnum.student)) {
-        const { data: isRegistered } =
-          await CourseService.isCoursesRegisteredAsync();
-        setIsCoursesRegistered(isRegistered);
-      }
-    };
-    try {
-      checkCoursesRegistration();
-    } catch (_) {}
-
-    const checkIfAccepted = async () => {
-      if (user && user.roles.includes(rolesEnum.student)) {
-        const { data: isAccepted } = await AdmissionService.isAcceptedAsync();
-        setIsAccepted(isAccepted);
-      }
-    };
-
-    try {
-      checkIfAccepted();
-    } catch (_) {}
-
     const errorMessage = localStorage.getItem("loadMessage");
     if (!errorMessage) return;
 
     toast.error(errorMessage);
     localStorage.removeItem("loadMessage");
   });
+
+  useEffect(() => {
+    if (!user || !user.roles.includes(rolesEnum.student)) return;
+
+    AdmissionService.isAcceptedAsync()
+      .then(({ data: isAccepted }) => {
+        setIsAccepted(isAccepted);
+
+        CourseService.isCoursesRegisteredAsync()
+          .then(({ data: isRegistered }) =>
+            setIsCoursesRegistered(isRegistered)
+          )
+          .catch(() => {});
+      })
+      .catch(() => {});
+  }, [user]);
 
   return (
     <AppContextProvider
