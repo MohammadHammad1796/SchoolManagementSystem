@@ -12,20 +12,10 @@ const RegisterCourses = () => {
   const [error, setError] = useState("");
   const { isCoursesRegistered } = useContext(AppContext);
 
-  const getCourses = async () => {
-    const { data } = await CourseService.getForMySPecializeAsync();
-    return data;
-  };
-
-  const handleInitialRender = async () => {
-    try {
-      const courses = await getCourses();
-      setCourses(courses);
-    } catch (_) {}
-  };
-
   useEffectOnInitialRender(() => {
-    handleInitialRender();
+    CourseService.getForMySPecializeAsync()
+      .then(({ data: courses }) => setCourses(courses))
+      .catch(() => setCourses([]));
   });
 
   const handleSubmit = async () => {

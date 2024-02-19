@@ -7,23 +7,23 @@ const StudentCourses = () => {
   const { studentId } = useParams();
   const [courses, setCourses] = useState([]);
 
-  const getCourses = async () => {
-    let data;
-    if (studentId)
-      ({ data } = await CourseService.getStudentCoursesAsync(studentId));
-    else ({ data } = await CourseService.getMineAsync());
-    return data;
-  };
-
-  const handleInitialRender = async () => {
-    try {
-      const courses = await getCourses();
-      setCourses(courses);
-    } catch (_) {}
+  const getCourses = () => {
+    return new Promise((resolve, reject) => {
+      if (studentId)
+        CourseService.getStudentCoursesAsync(studentId)
+          .then(({ data }) => resolve(data))
+          .catch(reject);
+      else
+        CourseService.getMineAsync()
+          .then(({ data }) => resolve(data))
+          .catch(reject);
+    });
   };
 
   useEffectOnInitialRender(() => {
-    handleInitialRender();
+    getCourses()
+      .then((courses) => setCourses(courses))
+      .catch(() => setCourses([]));
   });
 
   return (

@@ -19,8 +19,10 @@ const processRequestsNeedRefreshTokenQueue = ({ error = null } = {}) => {
 };
 
 axios.interceptors.response.use(null, (error) => {
-  const status = error.response && error.response.status;
   const result = () => Promise.reject(error);
+  const originalRequest = error.config;
+  if (originalRequest.errorConfig?.handleError === false) return result();
+  const status = error.response && error.response.status;
   const isDevelopment = process.env.NODE_ENV === "development";
 
   const networkError = error.code === "ERR_NETWORK";
@@ -68,7 +70,6 @@ axios.interceptors.response.use(null, (error) => {
   )
     return result();
 
-  const originalRequest = error.config;
   if (originalRequest.url === refreshTokenUrl) {
     logoutApp(path);
     return result();

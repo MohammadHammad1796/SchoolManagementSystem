@@ -28,35 +28,33 @@ const Courses = () => {
   const [lastUpdate, setLastUpdate] = useState(new Date());
 
   useEffect(() => {
-    const populateData = async () => {
-      let courses = await CourseService.getCoursesAsync(query);
-      if (courses.data.length === 0 && query.paginate.number !== 1) {
-        query.paginate.number = 1;
-        courses = await CourseService.getCoursesAsync(query);
-      }
-      setCourses(courses.data);
-    };
+    CourseService.getCoursesAsync(query)
+      .then(({ data: courses }) => {
+        if (courses.data.length || query.paginate.number === 1)
+          return setCourses(courses);
 
-    try {
-      populateData();
-    } catch (_) {}
+        const newQuery = { ...query };
+        newQuery.paginate.number = 1;
+        setQuery(newQuery);
+      })
+      .catch(() => setCourses([]));
   }, [lastUpdate, query]);
 
   const specializeList = [{ id: 0, name: "All" }, ...specializes.get()];
 
-  const handleSort = async (sort) => {
+  const handleSort = (sort) => {
     const newQuery = { ...query };
     newQuery.sort = sort;
     setQuery(newQuery);
   };
 
-  const handlePageChange = async (pageNumber) => {
+  const handlePageChange = (pageNumber) => {
     const newQuery = { ...query };
     newQuery.paginate.number = pageNumber;
     setQuery(newQuery);
   };
 
-  const handleListGroupSelect = async ({ id }) => {
+  const handleListGroupSelect = ({ id }) => {
     const newQuery = { ...query };
     newQuery.filters.specializeId = id;
     newQuery.paginate.number = 1;

@@ -20,13 +20,9 @@ function App() {
   const [isAccepted, setIsAccepted] = useState(false);
 
   useEffectOnInitialRender(() => {
-    const getSpecializes = async () => {
-      const specializes = await AdmissionService.getSpecializesAsync();
-      setSpecializes(specializes.data);
-    };
-    try {
-      getSpecializes();
-    } catch (_) {}
+    AdmissionService.getSpecializesAsync()
+      .then(({ data }) => setSpecializes(data))
+      .catch(() => setSpecializes([]));
 
     const errorMessage = localStorage.getItem("loadMessage");
     if (!errorMessage) return;

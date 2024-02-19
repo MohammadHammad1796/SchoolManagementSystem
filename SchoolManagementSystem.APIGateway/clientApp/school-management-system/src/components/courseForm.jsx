@@ -40,22 +40,30 @@ const CourseForm = () => {
     },
   };
 
-  const getCourse = async () => {
-    if (!id) return course;
+  const getCourse = () => {
+    if (!id) return Promise.resolve(course);
+  
+    return new Promise((resolve, reject) => {
+      CourseService.getByIdAsync(id)
+        .then(({ data: courseToEdit }) => resolve(courseToEdit))
+        .catch((exception) => {
+          if (exception.response && exception.response.status === 404) {
+            reject("/not-found");
+          } else {
+            reject(exception);
+          }
+        });
+    });
+  };
 
-    try {
-      const { data: courseToEdit } = await CourseService.getByIdAsync(id);
-      return courseToEdit;
-    } catch (exception) {
-      if (exception.response && exception.response.status === 404)
+  const setFormDataOnInitialRender = (setData) =>
+  getCourse()
+    .then((currentCourse) => setData(currentCourse))
+    .catch((error) => {
+      if (error === "/not-found")
         navigate("/not-found", { replace: true });
-    }
-  };
-
-  const setFormDataOnInitialRender = async (setData) => {
-    const currentCourse = await getCourse();
-    setData(currentCourse);
-  };
+      setData({ name: "", specializeId: 0 });
+    });
 
   const handleSubmit = async (course) => {
     const courseToSave = { ...course };

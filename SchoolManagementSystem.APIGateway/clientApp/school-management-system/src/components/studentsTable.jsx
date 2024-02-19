@@ -96,12 +96,13 @@ const StudentsTable = (props) => {
             className="btn btn-primary"
             disabled={student.isAccepted}
             style={{ margin: "5px", display: "block" }}
-            onClick={async () => {
-              try {
-                await AdmissionService.admitStudentAsync(student.id, true);
-                toast.success("Student accepted successfully.");
-                setLastUpdate(new Date());
-              } catch (_) {}
+            onClick={() => {
+              AdmissionService.admitStudentAsync(student.id, true)
+                .then(() => {
+                  toast.success("Student accepted successfully.");
+                  setLastUpdate(new Date());
+                })
+                .catch(() => {});
             }}
           >
             Accept
@@ -110,12 +111,13 @@ const StudentsTable = (props) => {
             className="btn btn-danger"
             disabled={!student.isAccepted && student.reviewed}
             style={{ margin: "5px", display: "block" }}
-            onClick={async () => {
-              try {
-                await AdmissionService.admitStudentAsync(student.id, false);
-                toast.success("Student rejected successfully.");
-                setLastUpdate(new Date());
-              } catch (_) {}
+            onClick={() => {
+              AdmissionService.admitStudentAsync(student.id, false)
+                .then(() => {
+                  toast.success("Student rejected successfully.");
+                  setLastUpdate(new Date());
+                })
+                .catch(() => {});
             }}
           >
             Reject

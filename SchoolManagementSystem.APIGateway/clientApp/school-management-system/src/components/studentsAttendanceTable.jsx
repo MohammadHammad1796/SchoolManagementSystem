@@ -58,16 +58,17 @@ const StudentsAttendanceTable = (props) => {
             className="btn btn-primary"
             disabled={student.isAttended}
             style={{ margin: "5px", display: "block" }}
-            onClick={async () => {
-              try {
-                await AttendanceService.saveAttendance({
-                  studentId: student.id,
-                  isAttended: true,
-                  date: date.get(),
-                });
-                toast.success("Student attended successfully.");
-                reloadTable();
-              } catch (_) {}
+            onClick={() => {
+              AttendanceService.saveAttendance({
+                studentId: student.id,
+                isAttended: true,
+                date: date.get(),
+              })
+                .then(() => {
+                  toast.success("Student attended successfully.");
+                  reloadTable();
+                })
+                .catch(() => {});
             }}
           >
             Attend
@@ -76,16 +77,17 @@ const StudentsAttendanceTable = (props) => {
             className="btn btn-danger"
             disabled={student.isAttended === false}
             style={{ margin: "5px", display: "block" }}
-            onClick={async () => {
-              try {
-                await AttendanceService.saveAttendance({
-                  studentId: student.id,
-                  isAttended: false,
-                  date: date.get(),
-                });
-                toast.success("Student absence successfully.");
-                reloadTable();
-              } catch (_) {}
+            onClick={() => {
+              AttendanceService.saveAttendance({
+                studentId: student.id,
+                isAttended: false,
+                date: date.get(),
+              })
+                .then(() => {
+                  toast.success("Student absence successfully.");
+                  reloadTable();
+                })
+                .catch(() => {});
             }}
           >
             Absence

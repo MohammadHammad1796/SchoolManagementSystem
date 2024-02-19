@@ -60,12 +60,13 @@ const CoursesTable = (props) => {
           <button
             className="btn btn-danger"
             style={{ margin: "5px" }}
-            onClick={async () => {
-              try {
-                await CourseService.deleteAsync(course.id);
-                toast.success("Course deleted successfully.");
-                setLastUpdate(new Date());
-              } catch (_) {}
+            onClick={() => {
+              CourseService.deleteAsync(course.id)
+                .then(() => {
+                  toast.success("Course deleted successfully.");
+                  setLastUpdate(new Date());
+                })
+                .catch(() => {});
             }}
           >
             Delete

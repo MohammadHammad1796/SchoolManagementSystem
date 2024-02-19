@@ -17,9 +17,9 @@ const ListGroup = (props) => {
       {items.map((item) => (
         <li
           className={`list-group-item ${isSelectedItem(item) && "active"}`}
-          style={{ userSelect: "none", cursor: "pointer" }}
+          style={{ userSelect: "none", cursor: isSelectedItem(item) ? "auto" : "pointer" }}
           aria-current={isSelectedItem(item) && "true"}
-          onClick={() => onItemSelect(item)}
+          onClick={() => !isSelectedItem(item) && onItemSelect(item)}
           key={item[valueProperty]}
         >
           {item[textProperty]}

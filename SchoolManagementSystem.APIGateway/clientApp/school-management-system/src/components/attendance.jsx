@@ -1,15 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import AppContext from "./context/appContext";
 import ListGroup from "./common/listGroup";
 import { getDateInCLientZone, getDateTimeInUTC } from "./../utils/helpers";
-import AdmissionService from "../services/admissionService";
 import { StudentContextProvider } from "./context/studentContext";
 import StudentsAttendanceTable from "./studentsAttendanceTable";
 import AttendanceService from "../services/attendanceService";
 
 const Attendance = () => {
   const { specializes } = useContext(AppContext);
-  const specializeList = specializes.get() || [];
+  const specializeList = useMemo(() => specializes.get() || [], [specializes]);
   const [students, setStudents] = useState({});
   const [query, setQuery] = useState({
     paginate: {
@@ -32,27 +31,24 @@ const Attendance = () => {
 
     if (!query.filters.specializeId) {
       query.filters.specializeId = specializeList[0].id;
-      setQuery(query);
+      return setQuery(query);
     }
 
-    const populateData = async () => {
-      const resource = JSON.parse(JSON.stringify(query));
-      resource.filters.date = getDateTimeInUTC(resource.filters.date);
-      let students = await AttendanceService.getStudentsAsync(resource);
-      if (students.data.length === 0 && resource.paginate.number !== 1) {
-        resource.paginate.number = 1;
-        students = await AdmissionService.getStudentsAsync(resource);
-      }
+    const queryResource = JSON.parse(JSON.stringify(query));
+    queryResource.filters.date = getDateTimeInUTC(queryResource.filters.date);
+    AttendanceService.getStudentsAsync(queryResource)
+      .then(({ data: students }) => {
+        if (students.data.length || queryResource.paginate.number === 1)
+          return setStudents(students);
 
-      setStudents(students.data);
-    };
+        const newQuery = { ...query };
+        newQuery.paginate.number = 1;
+        setQuery(newQuery);
+      })
+      .catch(() => setStudents({}));
+  }, [query, lastUpdate, specializes, specializeList]);
 
-    try {
-      populateData();
-    } catch (_) {}
-  }, [query, lastUpdate, specializes]);
-
-  const handleSpecializeSelect = async ({ id }) => {
+  const handleSpecializeSelect = ({ id }) => {
     const studentsQuery = { ...query };
     studentsQuery.filters.specializeId = id;
     setQuery(studentsQuery);
@@ -65,13 +61,13 @@ const Attendance = () => {
     setQuery(newQuery);
   };
 
-  const handleSort = async (sort) => {
+  const handleSort = (sort) => {
     const newQuery = { ...query };
     newQuery.sort = sort;
     setQuery(newQuery);
   };
 
-  const handlePageChange = async (pageNumber) => {
+  const handlePageChange = (pageNumber) => {
     const newQuery = { ...query };
     newQuery.paginate.number = pageNumber;
     setQuery(newQuery);

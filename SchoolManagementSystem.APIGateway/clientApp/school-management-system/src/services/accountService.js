@@ -19,7 +19,9 @@ class AccountService {
   };
 
   static logoutAsync = async () => {
-    return await httpService.get(this.#logoutApiUrl);
+    return await httpService.get(this.#logoutApiUrl, {
+      errorConfig: { handleError: false },
+    });
   };
 
   static refreshAccessTokenAsync = async () => {

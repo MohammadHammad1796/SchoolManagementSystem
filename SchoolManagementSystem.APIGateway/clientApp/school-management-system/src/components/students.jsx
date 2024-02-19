@@ -26,18 +26,16 @@ const Students = () => {
   const [lastUpdate, setLastUpdate] = useState(new Date());
 
   useEffect(() => {
-    const populateData = async () => {
-      let students = await AdmissionService.getStudentsAsync(query);
-      if (students.data.length === 0 && query.paginate.number !== 1) {
-        query.paginate.number = 1;
-        students = await AdmissionService.getStudentsAsync(query);
-      }
-      setStudents(students.data);
-    };
+    AdmissionService.getStudentsAsync(query)
+      .then(({ data: students }) => {
+        if (students.data.length || query.paginate.number === 1)
+          return setStudents(students);
 
-    try {
-      populateData();
-    } catch (_) {}
+        const newQuery = { ...query };
+        newQuery.paginate.number = 1;
+        setQuery(newQuery);
+      })
+      .catch(() => setStudents([]));
   }, [lastUpdate, query]);
 
   const statusList = [
@@ -65,19 +63,19 @@ const Students = () => {
 
   const specializeList = [{ id: 0, name: "All" }, ...specializes.get()];
 
-  const handleSort = async (sort) => {
+  const handleSort = (sort) => {
     const newQuery = { ...query };
     newQuery.sort = sort;
     setQuery(newQuery);
   };
 
-  const handlePageChange = async (pageNumber) => {
+  const handlePageChange = (pageNumber) => {
     const newQuery = { ...query };
     newQuery.paginate.number = pageNumber;
     setQuery(newQuery);
   };
 
-  const handleListGroupSelect = async (selectName, { id }) => {
+  const handleListGroupSelect = (selectName, { id }) => {
     const newQuery = { ...query };
     newQuery.filters[selectName] = id;
     newQuery.paginate.number = 1;

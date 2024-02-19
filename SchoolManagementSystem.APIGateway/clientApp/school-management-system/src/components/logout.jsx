@@ -10,17 +10,14 @@ const Logout = () => {
   const navigate = useNavigate();
 
   useEffectOnInitialRender(() => {
-    const logout = async () => {
-      try {
-        await AccountsService.logoutAsync();
-      } catch (_) {}
-
-      setJwt();
-      user.set(null, () => {
-        navigate("/");
+    AccountsService.logoutAsync()
+      .catch(() => {})
+      .finally(() => {
+        setJwt();
+        user.set(null, () => {
+          navigate("/");
+        });
       });
-    };
-    logout();
   });
 
   return <></>;

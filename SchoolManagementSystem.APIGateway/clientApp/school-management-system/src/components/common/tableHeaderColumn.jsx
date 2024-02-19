@@ -7,13 +7,13 @@ const TableHeaderColumn = (props) => {
   isSortable = isSortable === undefined ? true : false;
   isVisible = isVisible === undefined ? true : false;
 
-  const raiseSort = async (currentSort, identifier) => {
+  const raiseSort = (currentSort, identifier) => {
     currentSort.isAscending =
       currentSort.sortBy === identifier
         ? !currentSort.isAscending
         : currentSort.isAscending;
     currentSort.sortBy = identifier;
-    await onSort(currentSort);
+    onSort(currentSort);
   };
 
   return (
