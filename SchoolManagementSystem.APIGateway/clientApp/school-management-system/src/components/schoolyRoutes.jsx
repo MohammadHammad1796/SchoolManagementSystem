@@ -24,11 +24,9 @@ const SchoolyRoutes = () => {
           } else if (requireAuthorize && path !== "/logout")
             element = <SchoolyNavigate path="/login" />;
 
-          return (
-            (isVisible === true || isVisible === undefined) && (
-              <Route path={path} element={element} key={path} />
-            )
-          );
+          if (isVisible !== undefined && isVisible !== true)
+            element = <Navigate to="/forbidden" />;
+          return <Route path={path} element={element} key={path} />
         }
       )}
     </Routes>

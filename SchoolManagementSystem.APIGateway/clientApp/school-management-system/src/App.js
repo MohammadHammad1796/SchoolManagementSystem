@@ -18,6 +18,7 @@ function App() {
   const [specializes, setSpecializes] = useState([]);
   const [isCoursesRegistered, setIsCoursesRegistered] = useState(false);
   const [isAccepted, setIsAccepted] = useState(false);
+  const [shouldRenderRoutes, setShouldRenderRoutes] = useState(false);
 
   useEffectOnInitialRender(() => {
     AdmissionService.getSpecializesAsync()
@@ -32,24 +33,28 @@ function App() {
   });
 
   useEffect(() => {
-    if (!user || !user.roles.includes(rolesEnum.student)) return;
+    let isAcceptedResult = false,
+      isCoursesRegisteredResult = false,
+      shouldRenderRoutesResult = true;
+    const setStates = () => {
+      setIsAccepted(isAcceptedResult);
+      setIsCoursesRegistered(isCoursesRegisteredResult);
+      setShouldRenderRoutes(shouldRenderRoutesResult);
+    };
+
+    if (!user || !user.roles.includes(rolesEnum.student)) return setStates();
 
     AdmissionService.isAcceptedAsync()
       .then(({ data: isAccepted }) => {
-        if (!isAccepted) {
-          setIsAccepted(isAccepted);
-          setIsCoursesRegistered(false);
-          return;
-        }
+        if (!isAccepted) return setStates();
 
+        isAcceptedResult = true;
         CourseService.isCoursesRegisteredAsync()
-          .then(({ data: isRegistered }) =>
-            setIsCoursesRegistered(isRegistered)
-          )
-          .catch(() => setIsCoursesRegistered(false))
-          .finally(() => setIsAccepted(isAccepted));
+          .then(({ data: isRegistered }) => (isCoursesRegisteredResult = true))
+          .catch(() => {})
+          .finally(() => setStates());
       })
-      .catch(() => setIsAccepted(false));
+      .catch(() => setStates());
   }, [user]);
 
   return (
@@ -75,7 +80,7 @@ function App() {
         style={{ marginBottom: "75px", marginTop: "60px" }}
       >
         <ToastContainer />
-        <SchoolyRoutes />
+        {shouldRenderRoutes && <SchoolyRoutes />}
       </main>
 
       <footer
